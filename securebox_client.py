@@ -25,8 +25,12 @@ def main():
         if len(args.create_id) == 2:
             user.create_id(args.create_id[0], args.create_id[1])
         else:
-            logging.error('\n-> Error de parametros, uso: --create_id nombre email')
+            print('\n-> Error de parametros, uso: --create_id nombre email')
             exit()
+    elif args.search_id:
+        user.search_id(args.search_id)
+    elif args.delete_id:
+        user.delete_id(args.delete_id)
 
 
 if __name__ == '__main__':

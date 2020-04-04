@@ -23,6 +23,6 @@ def gen_id():
         file_out = open(filepath_publ, "wb")
         file_out.write(public_key)
         file_out.close()
-        logging.info("-> Generando par de claves RSA de 2048 bits...OK")
+        print("-> Generando par de claves RSA de 2048 bits...OK")
     else:
-        logging.info("-> Generando par de claves RSA de 2048 bits...Ya existen!")
+        print("-> Generando par de claves RSA de 2048 bits...Ya existen!")
