@@ -5,6 +5,7 @@ import requests
 import config
 import logging
 import os
+import sys
 from cipher import gen_id
 from Crypto.PublicKey import RSA
 
@@ -28,7 +29,7 @@ def create_id(nombre, email):
     if not r.ok:
         print("\n-> Error al registrar identidad:\n"
               "\t- Codigo: {}\n\t- Info: {}".format(r.json()['http_error_code'], r.json()['description']))
-        exit()
+        sys.exit()
     else:
         print("-> Identidad con ID#{} creada correctamente".format(r.json()['userID']))
 
@@ -45,7 +46,7 @@ def get_public_key(user_id):
     if not r.ok:
         print("\n-> Error al obtener la clave publica:\n"
               "\t- Codigo: {}\n\t- Info: {}".format(r.json()['http_error_code'], r.json()['description']))
-        exit()
+        sys.exit()
     else:
         print("-> Obteniendo clave publica...OK")
         return r.json()['publicKey']
@@ -62,7 +63,7 @@ def search_id(datasearch):
     if not r.ok:
         print("\n-> Error al buscar usuario\n"
               "\t- Codigo: {}\n\t- Info: {}".format(r.json()['http_error_code'], r.json()['description']))
-        exit()
+        sys.exit()
     else:
         users = r.json()
         if len(users) > 0:
@@ -84,7 +85,7 @@ def delete_id(user_id):
     if not r.ok:
         print("\n-> Error al borrar identidad:\n"
               "\t- Codigo: {}\n\t- Info: {}".format(r.json()['http_error_code'], r.json()['description']))
-        exit()
+        sys.exit()
     else:
         print("-> Solicitando borrado de la identidad #{}...OK".format(r.json()['userID']))
         print("-> Identidad con ID#{} borrada correctamente".format(r.json()['userID']))
