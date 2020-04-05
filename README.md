@@ -1,6 +1,5 @@
 # practica2
 
-Resumen video:
 
 1- Mediante la terminal, se invoca al programa securebox_client.py y mediante parametros se le indica la accion updload (en este caso), la direccion del fichero que se quiere compartir y la id del cliente a quien va dirigido el fichero.
   - Libreria argparse: gestion de parametros
@@ -20,7 +19,11 @@ Resumen video:
         - La firma va al principio (antes del mensaje y antes de cifrar)<br>
         - Ademas de una clave simetrica aleatoria para el AES, tambien hay que usar un IV (initial vector), por lo que al final queda Mensaje cifrado + Sobre Digital + IV (el orden viene en el enunciado).<br>
         - Libreria pycriptodime: libreria para cifrado y descifrado<br>
+        - Para la firma usamos la funcion PKCS#1 v1.5 (RSA)<br>
+        - El IV se añade sin encriptar<br>
 
+  - Si se borra una identidad, su token quedará invalidado, por lo que para crear una identidad nueva habra que solicitar 
+    nuevo token
 
 
 Division general trabajo:
