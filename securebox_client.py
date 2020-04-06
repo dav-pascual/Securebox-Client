@@ -5,6 +5,7 @@ import argparse
 import logging
 import user
 import cipher
+import config
 import sys
 
 logging.basicConfig(level=logging.DEBUG)
@@ -57,11 +58,18 @@ def main():
     elif args.delete_file:
         pass
     elif args.encrypt:
-        cipher.encrypt()
+        if args.dest_id:
+            cipher.encrypt(args.encrypt, args.dest_id)
+        else:
+            parser.print_help()
     elif args.sign:
         cipher.sign(args.sign)
     elif args.enc_sign:
-        pass
+        if args.dest_id:
+            cipher.sign(args.enc_sign)
+            cipher.encrypt(config.SIGNED_PREFIX + args.enc_sign, args.dest_id)
+        else:
+            parser.print_help()
 
 
 if __name__ == '__main__':
