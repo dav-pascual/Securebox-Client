@@ -27,7 +27,7 @@ def create_id(nombre, email):
     r = requests.post(url, json=args, headers=headers)
     if not r.ok:
         print("\n-> Error al registrar identidad:\n"
-              "\t- Codigo: {}\n\t- Info: {}".format(r.json()['http_error_code'], r.json()['description']))
+              "\t-> Codigo: {}\n\t- Info: {}".format(r.json()['http_error_code'], r.json()['description']))
         sys.exit()
     else:
         print("-> Identidad con ID#{} creada correctamente".format(r.json()['userID']))
@@ -44,11 +44,16 @@ def get_public_key(user_id):
     r = requests.post(url, json=args, headers=headers)
     if not r.ok:
         print("\n-> Error al obtener la clave publica de ID {}:\n"
-              "\t- Codigo: {}\n\t- Info: {}".format(user_id, r.json()['http_error_code'], r.json()['description']))
+              "\t-> Codigo: {}\n\t- Info: {}".format(user_id, r.json()['http_error_code'], r.json()['description']))
         sys.exit()
     else:
         print("-> Recuperando clave pública de ID {}...OK".format(user_id))
-        return r.json()['publicKey']
+        pk = r.json()['publicKey']
+        if pk is None:
+            print("-> Error: El usuario con ID {} no esta registrado en el sistema.".format(user_id))
+            sys.exit()
+        else:
+            return pk
 
 
 def search_id(datasearch):
@@ -61,7 +66,7 @@ def search_id(datasearch):
     r = requests.post(url, json=args, headers=headers)
     if not r.ok:
         print("\n-> Error al buscar usuario\n"
-              "\t- Codigo: {}\n\t- Info: {}".format(r.json()['http_error_code'], r.json()['description']))
+              "\t-> Codigo: {}\n\t- Info: {}".format(r.json()['http_error_code'], r.json()['description']))
         sys.exit()
     else:
         users = r.json()
@@ -83,7 +88,7 @@ def delete_id(user_id):
     r = requests.post(url, json=args, headers=headers)
     if not r.ok:
         print("\n-> Error al borrar identidad:\n"
-              "\t- Codigo: {}\n\t- Info: {}".format(r.json()['http_error_code'], r.json()['description']))
+              "\t-> Codigo: {}\n\t- Info: {}".format(r.json()['http_error_code'], r.json()['description']))
         sys.exit()
     else:
         print("-> Solicitando borrado de la identidad #{}...OK".format(r.json()['userID']))
