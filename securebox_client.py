@@ -3,10 +3,11 @@
 
 import argparse
 import logging
+import config
 import user
 import cipher
-import config
-import sys
+import file
+
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -50,9 +51,12 @@ def main():
     elif args.delete_id:
         user.delete_id(args.delete_id)
     elif args.upload:
-        pass
+        if args.dest_id:
+            file.upload(args.upload, args.dest_id)
+        else:
+            parser.print_help()
     elif args.list_files:
-        pass
+        file.list_files()
     elif args.download:
         pass
     elif args.delete_file:
