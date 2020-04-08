@@ -1,8 +1,8 @@
 #!/usr/bin/python3
-# Cliente SecureBox
+"""Cliente SecureBox
+"""
 
 import argparse
-import logging
 import config
 import user
 import cipher
@@ -10,7 +10,9 @@ import file
 
 
 def main():
-    # Procesado de parametros de entrada
+    """Funcion main. Procesado de parametros de entrada
+       y flujo del programa
+    """
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--create_id", nargs=2, metavar=("nombre", "email"),

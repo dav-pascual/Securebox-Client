@@ -1,7 +1,8 @@
 #!/usr/bin/python3
-# Config file
+"""Configuration file
+"""
 USER_ID = 'e358177'
-TOKEN = '8eA9a7B20fcEF4dD'
+TOKEN = 'CFaA3f4dB8Ee0c6b'
 KEYS_DIR = 'keys'
 FILES_DIR = 'files'
 SIGNED_PREFIX = 'signed_'
