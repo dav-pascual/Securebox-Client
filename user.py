@@ -27,7 +27,7 @@ def create_id(nombre, email):
     r = requests.post(url, json=args, headers=headers)
     if not r.ok:
         print("\n-> Error al registrar identidad:\n"
-              "\t-> Codigo: {}\n\t- Info: {}".format(r.json()['http_error_code'], r.json()['description']))
+              "\t- Codigo: {}\n\t- Info: {}".format(r.json()['http_error_code'], r.json()['description']))
         sys.exit()
     else:
         print("-> Identidad con ID#{} creada correctamente".format(r.json()['userID']))
@@ -36,7 +36,6 @@ def create_id(nombre, email):
 def get_public_key(user_id):
     """Devuelve la clave publica de un usuario dado su user Id (NIA).
     """
-    print("Obteniendo clave publica de {}...".format(user_id))
     # LLamada al API Rest
     url = config.API_URL + config.ENDPOINT['publicKey']
     args = {'userID': user_id}
@@ -44,7 +43,7 @@ def get_public_key(user_id):
     r = requests.post(url, json=args, headers=headers)
     if not r.ok:
         print("\n-> Error al obtener la clave publica de ID {}:\n"
-              "\t-> Codigo: {}\n\t- Info: {}".format(user_id, r.json()['http_error_code'], r.json()['description']))
+              "\t- Codigo: {}\n\t- Info: {}".format(user_id, r.json()['http_error_code'], r.json()['description']))
         sys.exit()
     else:
         print("-> Recuperando clave pública de ID {}...OK".format(user_id))
@@ -88,7 +87,7 @@ def delete_id(user_id):
     r = requests.post(url, json=args, headers=headers)
     if not r.ok:
         print("\n-> Error al borrar identidad:\n"
-              "\t-> Codigo: {}\n\t- Info: {}".format(r.json()['http_error_code'], r.json()['description']))
+              "\t- Codigo: {}\n\t- Info: {}".format(r.json()['http_error_code'], r.json()['description']))
         sys.exit()
     else:
         print("-> Solicitando borrado de la identidad #{}...OK".format(r.json()['userID']))
