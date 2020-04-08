@@ -8,7 +8,7 @@ from Crypto.Hash import SHA256
 from Crypto.Signature import pkcs1_15
 from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.Random import get_random_bytes
-from Crypto.Util.Padding import pad
+from Crypto.Util.Padding import pad, unpad
 
 
 def gen_id():
@@ -43,12 +43,12 @@ def sign(fichero):
     private_key = RSA.import_key(open(priv_key_path).read())
     # Obtener hash del fichero, cifrarlo con la clave privada y guardar la firma
     if os.path.isfile(filepath):
-        with open(filepath, "rb") as f:
-            h = SHA256.new(f.read())
+        with open(filepath, "rb") as f, open(signed_fp, "wb") as signed_file:
+            data = f.read()
+            h = SHA256.new(data)
             signature = pkcs1_15.new(private_key).sign(h)
-            with open(signed_fp, "wb") as signed_file:
-                signed_file.write(signature)
-                signed_file.write(f.read())
+            signed_file.write(signature)
+            signed_file.write(data)
         print("-> Firmando fichero como '{}'...OK".format(config.SIGNED_PREFIX + fichero))
     else:
         print("Error: El fichero especificado no existe")
@@ -85,3 +85,47 @@ def encrypt(fichero, dest_id):
         encrypted_file.write(enc_s_key)
         encrypted_file.write(enc_data)
     print("-> Cifrando fichero como '{}'...OK".format(config.ENC_PREFIX + fichero))
+
+
+def decrypt_s_key(enc_s_key):
+    """Descifra la clave simetrica codificada mediante algoritmo RSA con la clave privada
+    """
+    filepath_priv = os.path.abspath(os.path.join(config.KEYS_DIR, 'private.pem'))
+    if os.path.isfile(filepath_priv):
+        private_key = RSA.import_key(open(filepath_priv).read())
+        cipher_rsa = PKCS1_OAEP.new(private_key)
+        s_key = cipher_rsa.decrypt(enc_s_key)
+        return s_key
+    else:
+        print("Error: No se encuentra la clave privada")
+        sys.exit()
+
+
+def decrypt_msg(enc_msg, iv, s_key):
+    """Descifra un mensaje codificado mediante el algoritmo AES
+    """
+    try:
+        cipher_aes = AES.new(s_key, AES.MODE_CBC, iv)
+        msg = unpad(cipher_aes.decrypt(enc_msg), AES.block_size)
+        print("-> Descifrando fichero...OK")
+        return msg
+    except (ValueError, KeyError):
+        print("Error: Descifrado de mensaje erroneo")
+        sys.exit()
+
+
+def verify_sign(msg, source_id):
+    """Verifica que la firma del emisor sea valida en el mensaje recibido
+    """
+    signature = msg[:256]
+    payload = msg[256:]
+    from user import get_public_key
+    src_pk = RSA.import_key(get_public_key(source_id))
+    h = SHA256.new(payload)
+    try:
+        pkcs1_15.new(src_pk).verify(h, signature)
+        print("-> Verificando firma...OK")
+        return payload
+    except (ValueError, TypeError):
+        print("Error: La firma del archivo no es valida")
+        sys.exit()

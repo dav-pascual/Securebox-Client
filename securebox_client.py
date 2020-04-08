@@ -9,9 +9,6 @@ import cipher
 import file
 
 
-logging.basicConfig(level=logging.DEBUG)
-
-
 def main():
     # Procesado de parametros de entrada
     parser = argparse.ArgumentParser()
@@ -58,9 +55,12 @@ def main():
     elif args.list_files:
         file.list_files()
     elif args.download:
-        pass
+        if args.source_id:
+            file.download(args.download, args.source_id)
+        else:
+            parser.print_help()
     elif args.delete_file:
-        pass
+        file.delete_file(args.delete_file)
     elif args.encrypt:
         if args.dest_id:
             cipher.encrypt(args.encrypt, args.dest_id)
