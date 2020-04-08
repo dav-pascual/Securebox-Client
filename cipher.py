@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-# Modulo de cifrado, firma de archivos y generacion de claves
+"""Modulo que se encarga del cifrado, firma de archivos
+   y generacion de claves
+"""
 import os
 import config
 import sys
@@ -34,13 +36,19 @@ def gen_id():
 def sign(fichero):
     """Firma el fichero recibido..
        El fichero a firmar debe estar almacenado en el archivo de config.py
+       IN:
+            - fichero: nomber del fichero que se desea firmar
     """
     # Direcciones a usar
     filepath = os.path.abspath(os.path.join(config.FILES_DIR, fichero))
     signed_fp = os.path.abspath(os.path.join(config.FILES_DIR, config.SIGNED_PREFIX + fichero))
     priv_key_path = os.path.abspath(os.path.join(config.KEYS_DIR, 'private.pem'))
     # Obtener clave privada propia
-    private_key = RSA.import_key(open(priv_key_path).read())
+    try:
+        private_key = RSA.import_key(open(priv_key_path).read())
+    except (IOError, OSError) as e:
+        print("Error al obtener la clave privada")
+        sys.exit()
     # Obtener hash del fichero, cifrarlo con la clave privada y guardar la firma
     if os.path.isfile(filepath):
         with open(filepath, "rb") as f, open(signed_fp, "wb") as signed_file:
@@ -58,6 +66,9 @@ def sign(fichero):
 def encrypt(fichero, dest_id):
     """Cifra el fichero recibido.
        El fichero a cifrar debe estar almacenado en el archivo de config.py
+       IN:
+            - fichero: nombre del fichero que se desea cifrar
+            - dest_id: ID del usuario del cual usaremos su clave publica para cifrar
     """
     filepath = os.path.abspath(os.path.join(config.FILES_DIR, fichero))
     if os.path.isfile(filepath):
@@ -89,6 +100,9 @@ def encrypt(fichero, dest_id):
 
 def decrypt_s_key(enc_s_key):
     """Descifra la clave simetrica codificada mediante algoritmo RSA con la clave privada
+       IN:
+            - enc_s_key: Clave simetrica cifrada, la cual queremos descifrar
+       OUT: clave simetrica descifrada
     """
     filepath_priv = os.path.abspath(os.path.join(config.KEYS_DIR, 'private.pem'))
     if os.path.isfile(filepath_priv):
@@ -103,6 +117,11 @@ def decrypt_s_key(enc_s_key):
 
 def decrypt_msg(enc_msg, iv, s_key):
     """Descifra un mensaje codificado mediante el algoritmo AES
+       IN:
+            - enc_msg: fichero que se desea descifrar
+            - iv: vector inicial
+            - s_key: clave simetrica de descifrado
+       OUT: mensaje descifrado
     """
     try:
         cipher_aes = AES.new(s_key, AES.MODE_CBC, iv)
@@ -116,6 +135,10 @@ def decrypt_msg(enc_msg, iv, s_key):
 
 def verify_sign(msg, source_id):
     """Verifica que la firma del emisor sea valida en el mensaje recibido
+       IN:
+            - msg: mensaje del cual queremos verificar su firma
+            - source_id: ID del usuario que firmo el mensaje
+       OUT: mensaje sin la firma
     """
     signature = msg[:256]
     payload = msg[256:]

@@ -1,6 +1,7 @@
 #!/usr/bin/python3
-# Modulo de gestion de subida y descarga de ficheros
-
+"""Modulo que se encarga de la gestion de subida
+   y descarga de ficheros
+"""
 import requests
 import config
 import os
@@ -12,8 +13,12 @@ import re
 def upload(fichero, dest_id):
     """Envia un fichero a un usuario subiendolo al servidor,
        firmandolo y encriptandolo de antemano.
+       IN:
+            - fichero: nombre del fichero que se desea subir a SecureBox
+            - dest_id: ID del usuario a quien lo queremos enviar
     """
     # Firma y encriptacion del fichero
+    print("Solicitado envio de fichero a SecureBox")
     cipher.sign(fichero)
     cipher.encrypt(config.SIGNED_PREFIX + fichero, dest_id)
 
@@ -34,6 +39,11 @@ def upload(fichero, dest_id):
 
 
 def download(file_id, source_id):
+    """Recupera un fichero de SecureBox, lo descifra y verifica su firma
+       IN:
+            - file_id: id del fichero que se desea descargar de SecureBox
+            - source_id: ID del usuario que nos lo envia
+    """
     url = config.API_URL + config.ENDPOINT['download']
     # LLamada al API Rest
     headers = {"Authorization": "Bearer " + config.TOKEN}
@@ -49,15 +59,15 @@ def download(file_id, source_id):
         iv = r.content[:16]
         enc_s_key = r.content[16:272]
         enc_msg = r.content[272:]
-        s_key = cipher.decrypt_s_key(enc_s_key)
-        msg = cipher.decrypt_msg(enc_msg, iv, s_key)
-        payload = cipher.verify_sign(msg, source_id)
-        d = r.headers['content-disposition']
+        s_key = cipher.decrypt_s_key(enc_s_key)             # Descifrar clave simetrica con RSA
+        msg = cipher.decrypt_msg(enc_msg, iv, s_key)        # Descifrar mensaje con AES
+        payload = cipher.verify_sign(msg, source_id)        # Verificar firma
+        d = r.headers['content-disposition']                # Obtener nombre del fichero
         fname = re.findall("filename=(.+)", d)[0]
         fname = fname.replace('"', '')
         filepath = os.path.abspath(os.path.join(config.FILES_DIR, fname))
         with open(filepath, "wb") as file:
-            file.write(payload)
+            file.write(payload)                             # Guardar fichero
         print("Fichero {} descargado y verificado correctamente".format(fname))
 
 
@@ -85,6 +95,8 @@ def list_files():
 
 def delete_file(file_id):
     """Borra un fichero con el ID especificado del sistema.
+       IN:
+            - file_id: id del fichero que se desea borrar de SecureBox
     """
     url = config.API_URL + config.ENDPOINT['delete_file']
     # LLamada al API Rest
