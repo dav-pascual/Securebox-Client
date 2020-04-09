@@ -11,7 +11,7 @@ Cliente de terminal de SecureBox desarrollado con python.
 
 ## Uso
 
-Consultar la [Wiki](https://opensource.org/licenses/MIT) o ejecutar en la raíz del proyecto para obtener info:
+Consultar la [Wiki](https://git.eps.uam.es/david.pascualh/practica2/-/wikis/Cliente-SecureBox#uso-del-programa) o ejecutar en la raíz del proyecto para obtener info:
 > python3 securebox_client.py -h
 
 ## Autores
