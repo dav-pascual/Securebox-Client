@@ -10,3 +10,7 @@ __pycache__/
 # Testing files
 files/*
 !files/.gitkeep
+
+# Keys
+keys/*
+!keys/.gitkeep
