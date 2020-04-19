@@ -1,0 +1,16 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Project files
+.vscode/
+.idea/
+
+# Testing files
+files/*
+!files/.gitkeep
+
+# Keys
+keys/*
+!keys/.gitkeep
