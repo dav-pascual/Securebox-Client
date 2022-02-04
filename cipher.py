@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""Modulo que se encarga del cifrado, firma de archivos
-   y generacion de claves
+"""Module that handles encryption, file signing and key generation.
 """
 import os
 import config

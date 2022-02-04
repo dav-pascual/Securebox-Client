@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Cliente SecureBox
+"""SecureBox client
 """
 
 import argparse
@@ -10,37 +10,36 @@ import file
 
 
 def main():
-    """Funcion main. Procesado de parametros de entrada
-       y flujo del programa
+    """Main function. Input parameters processing.
     """
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--create_id", nargs=2, metavar=("nombre", "email"),
-                        help="Crea una nueva identidad.")
+                        help="Create a new identity.")
     group.add_argument("--search_id", metavar="cadena",
-                       help="Busca un usuario con nombre o correo. Uso: --search_id cadena")
+                       help="Search a new user by name or email. Use: --search_id cadena")
     group.add_argument("--delete_id", metavar="id",
-                       help="Borra la identidad con ID id.")
+                       help="Delete identity by ID.")
     group.add_argument("--upload", metavar="fichero",
-                       help="Envia un fichero a usuario especificado con la opcion --dest_id.")
+                       help="Send user to file specified with option --dest_id.")
     group.add_argument("--list_files", action="store_true",
-                       help="Lista todos los ficheros pertenecientes al usuario.")
+                       help="List all files belonging to a user.")
     group.add_argument("--download", metavar="id_fichero",
-                       help="Recupera un fichero con ID id_fichero y emisor especificado con la "
-                            "opcion --source_id del sistema, verifica firma y descifra.")
+                       help="Retrieve file from the server by ID id_fichero and sender specified with"
+                            "option --source_id, verify signature and decrypt.")
     group.add_argument("--delete_file", metavar="id_fichero",
-                       help="Borra un fichero del sistema con ID id_fichero.")
+                       help="Delete file from server by ID id_fichero.")
     group.add_argument("--encrypt", metavar="fichero",
-                       help="Cifra un fichero, de forma que puede ser descifrado por otro usuario, cuyo ID es "
-                            "especificado con la opción --dest_id.")
-    group.add_argument("--sign", metavar="fichero", help="Firma un fichero.")
+                       help="Encrypt file, which a user with ID specified with option --dest_id"
+                            "will be able to decrypt")
+    group.add_argument("--sign", metavar="fichero", help="Sign a file")
     group.add_argument("--enc_sign", metavar="fichero",
-                       help="Cifra y firma un fichero, combinando funcionalmente las dos opciones anteriores "
-                            "y recibiendo ID del fichero con la opcion --dest_id.")
+                       help="Encrypt and sign a file, combining last two options,"
+                            "specifying destination user with option --dest_id.")
     parser.add_argument("--dest_id", metavar="id",
-                        help="ID del receptor del fichero.")
+                        help="File receiver ID.")
     parser.add_argument("--source_id", metavar="id",
-                        help="ID del emisor del fichero.")
+                        help="File sender ID")
     args = parser.parse_args()
 
     if args.create_id:
