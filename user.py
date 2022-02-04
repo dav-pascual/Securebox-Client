@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Modulo que se encarga de la gestion de clientes
+"""Module for user management.
 """
 
 import requests

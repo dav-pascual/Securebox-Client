@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""Modulo que se encarga de la gestion de subida
-   y descarga de ficheros
+"""Module in charge of the management of uploading and downloading files.
 """
 import requests
 import config
